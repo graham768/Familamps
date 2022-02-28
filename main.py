@@ -1,4 +1,4 @@
-from wifimgr import *
+from microwifimanager.manager import *
 
 wlan = WifiManager().get_connection()
 

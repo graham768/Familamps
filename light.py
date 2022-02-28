@@ -1,6 +1,6 @@
 from machine import Pin
 from neopixel import NeoPixel
-import time
+import time, _thread, network
 
 class Light:
 
@@ -9,12 +9,13 @@ class Light:
     self.numLeds = numLeds
     self.leds = NeoPixel(pinNum, numLeds)
     self.api_key = api_key
+    self.changeColor(127,127,127)
+    _thread.start_new_thread(self.glowBlue)
 
   def changeColor(self, red, green, blue, delay_ms=3):
-    if(delay_ms):
+    if delay_ms:
       r_now, g_now, b_now = self.leds[0]
-
-      while(r_now != red and g_now != green and b_now != blue):
+      while r_now != red and g_now != green and b_now != blue:
         for x in range(0, self.numLeds):
           r_now, g_now, b_now = self.leds[x]
           self.leds[x] = (seek(r_now, red), seek(g_now, green), seek(b_now, blue))
@@ -34,6 +35,7 @@ class Light:
       time.sleep(delay_ms)
       self.changeColor(r_now, g_now, b_now, delay_ms=0)
 
+
   def blinkError(self):
     r_now, g_now, b_now = self.leds[0]
 
@@ -45,8 +47,18 @@ class Light:
 
     self.changeColor(r_now, g_now, b_now, delay_ms=0)
 
+
+  def glowBlue(self):
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    while not wlan.isconnected():
+      self.changeColor(0, 0, 255, delay_ms=5)
+      self.changeColor(0, 0, 60, delay_ms=5)
+
+
   def getColor(self):
     pass
+
 
   def postColor(self):
     pass

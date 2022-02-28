@@ -6,4 +6,4 @@ TOUCH_THRESHOLD = 500 # TODO test thresholds
 NUM_LEDS = 12
 LED_PIN = 0
 f = open('env.json', mode="r+", encoding="utf-8")
-env_dict = json.load(f)
+ENV_DICT = json.load(f)

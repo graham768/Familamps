@@ -1,9 +1,14 @@
 from microwifimanager.manager import *
+from machine import TouchPad, Pin
+from constants import *
+from light import Light
+import time
 
-wlan = WifiManager().get_connection()
+# TODO Turn on neopixel
+light = Light(LED_PIN, NUM_LEDS, env_dict['api_key'])
 
-# if security is needed:
-# wlan = WifiManager(ssid="MyAccessPoint", password="myPassword", authmode=3).get_connection()
+
+wlan = WifiManager(ssid="Familamp").get_connection()
 
 if wlan is None:
     print("Could not initialize the network connection.")
@@ -11,5 +16,22 @@ if wlan is None:
         pass  # you shall not pass :D
 
 
-# Main Code goes here, wlan is a working network.WLAN(STA_IF) instance.
-print("ESP OK")
+
+touchPin = TouchPad(Pin(TOUCH_PIN))
+lastRequest = 0
+while True:
+    # Check for an update every 10 seconds
+    if(time.time() - lastRequest > 10):
+        lastRequest = time.time()
+        light.changeColor(*light.getColor())
+
+
+    # TODO Capacitive touch reading
+    if(touchPin.read() > TOUCH_THRESHOLD):
+        light.blinkWhite()
+        try:
+            light.postColor(*light.leds[0])
+        except:
+            light.blinkError()
+            # TODO Error logging
+

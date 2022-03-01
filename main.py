@@ -2,16 +2,22 @@ from microwifimanager.manager import *
 from machine import TouchPad, Pin
 from constants import *
 from light import Light
-import time
+import time, api
 
-light = Light(LED_PIN, NUM_LEDS, ENV_DICT['api_key'])
+
+light = Light(LED_PIN, NUM_LEDS)
 
 wlan = WifiManager(ssid="Familamp").get_connection()
 
 if wlan is None:
     print("Could not initialize the network connection.")
     while True:
-        pass  # you shall not pass :D
+        # fade red on/off until rebooted
+        light.changeColor(127, 0, 0, delay_ms=5)
+        light.changeColor(0, 0, 0, delay_ms=5)
+
+time.sleep(2) # allow glowBlue thread to recognize connection
+light.changeColor(0,0,0)
 
 
 touchPin = TouchPad(Pin(TOUCH_PIN))
@@ -27,7 +33,10 @@ while True:
     if touchPin.read() > TOUCH_THRESHOLD:
         light.blinkWhite()
         try:
-            light.postColor(*light.leds[0])
+            resp = light.postColor(*light.leds[0])
+            if resp.status_code != "200":
+                light.blinkError()
+                # TODO error logging
         except:
             light.blinkError()
             # TODO Error logging

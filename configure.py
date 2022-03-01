@@ -10,3 +10,4 @@ time.sleep(3)
 
 # Install Dependencies
 upip.install('micro-wifi-manager')
+upip.install('urequests')

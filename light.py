@@ -11,6 +11,10 @@ class Light:
     # self.changeColor(127,127,127)
     _thread.start_new_thread(self.glowBlue, ())
 
+  def changeColorHex(self, hex, delay_ms=3):
+    red, green, blue = tuple(int(hex[i:i+2], 16) for i in (0, 2, 4))
+    self.changeColor(red, green, blue, delay_ms)
+
   def changeColor(self, red, green, blue, delay_ms=3):
     if delay_ms:
       r_now, g_now, b_now = self.leds[0]

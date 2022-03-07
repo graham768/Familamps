@@ -7,6 +7,7 @@
 - Update all of the constants in `constants.py` to reflect your GPIO pins, number of leds, and capacitive touch threshold (see below for this value)
 - Upload the repository to each of your microcontrollers and run `configure.py` to install [MicroWifiManager](https://github.com/graham768/MicroWiFiManager) for fast, intuitive WiFi configuration on deployed boards (from here, your WiFi credentials are no longer needed if you want to remove them from the board).
 - In MicroPython, `main.py` runs automatically when the microcontroller is power on. The light will look for an update every 10 seconds by default and if the capacitive touch threshold is passed, will post an updated.
+  -  Alternatively there's a second main file that hosts a color picker at the device's IP address on your home network and allows for color control.
 
 
 

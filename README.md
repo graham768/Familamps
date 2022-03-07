@@ -16,9 +16,16 @@ Your capacitive touch values will vary based on a number of factors, so it's bes
 
 ```python
 from machine import TouchPad, Pin
+from constants import TOUCH_PIN
 
-touchPin = TouchPad(Pin(<your-GPIO-pin>))
+touchPin = TouchPad(Pin(TOUCH_PIN))
 
 while True:
   print(touchPin.read())
+```
+
+On a configure light, you can also run `calibrate.py` which will change the light to white while getting an initial reading and then yellow when it's ready for you to touch and hold the capacitive area. When it changes back to white, the reading is finished
+
+```
+> python calibrate.py
 ```

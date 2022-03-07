@@ -1,15 +1,26 @@
-import urequests
+import urequests, json
 from constants import ENV_DICT
 
+baseUrl= f"{ENV_DICT['api_url']}?code={ENV_DICT['api_key']}"
 
 def getColor():
-  url = f"https://familamps-api.azurewebsites.net/api/GetColor?code={ENV_DICT['api_key']}"
-  return urequests.get(url)
+  response = urequests.get(baseUrl)
+  if response.status_code != 200:
+    raise Exception("api get error")
+  return json.loads(response.content)
 
 
 def putColor(red, green, blue):
-  url = f"https://familamps-api.azurewebsites.net/api/PutColor?code={ENV_DICT['api_key']}&red={red}&green={green}&blue={blue}"
+  url = f"{baseUrl}&red={red}&green={green}&blue={blue}"
   headers = {
-    "Content-Length": 0
+    b'Content-Length': b'0'
   }
-  return urequests.put(url, headers=headers)
+  response = urequests.put(url, headers=headers)
+  if response.status_code != 200:
+    raise Exception("api put error")
+  return json.loads(response.content)
+
+
+if __name__ == "__main__":
+    response = getColor()
+    print(response)

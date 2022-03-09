@@ -2,6 +2,7 @@ from microwifimanager.manager import *
 from machine import TouchPad, Pin, reset
 from constants import *
 from light import Light
+from senko import Senko
 import time, api
 
 
@@ -9,6 +10,7 @@ try:
 
     light = Light(LED_PIN, NUM_LEDS)
     touchPin = TouchPad(Pin(TOUCH_PIN))
+    OTA = Senko(user="graham768", repo="Familamps", files = UPDATE_FILES)
 
     wlan = WifiManager(ssid="Familamp").get_connection()
 
@@ -19,7 +21,11 @@ try:
             light.changeColor(127, 0, 0, delay_ms=5)
             light.changeColor(0, 0, 0, delay_ms=5)
 
-    time.sleep(2) # allow glowBlue thread to recognize wifi connection
+    if OTA.update():
+        print("Updated to the latest version! Rebooting...")
+        reset()
+
+    time.sleep(1) # allow glowBlue thread to recognize wifi connection
     light.changeColor(*api.getColor())
 
 
